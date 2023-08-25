@@ -7,18 +7,20 @@ router.route('/').get((req, res) => {
         .catch(err => res.status(400).json("Error: " + err));
 })
 
-router.route('/add').post((req , res) => {
-    const rows = req.body.rows;
-    const columns = req.body.columns;
-    const hasSelected = req.body.hasSelected;
-    const selectedRow = req.body.selectedRow;
-    const selectedColumn = req.body.selectedColumn;
-
-    const newTable = new Table({rows , columns , hasSelected , selectedRow , selectedColumn});
-
-    newTable.save()
-        .then(() => res.json('User added'))
-        .catch(err => res.status(400).json("Error: " + err));
+router.route('/update/:id').post((req , res) => {
+    Table.findById(req.params.id)
+        .then(table => {
+            table.rowsNumber = req.body.rowsNumber;
+            table.columnsNumber = req.body.columnsNumber;
+            table.hasSelected = req.body.hasSelected;
+            table.selectedRow = req.body.selectedRow;
+            table.selectedColumn = req.body.selectedColumn;
+            
+            table.save()
+                .then(() => res.json('Table Updated!'))
+                .catch(err => res.status(400).json('Error: ' + err));
+        })
+        .catch(err => res.status(400).json('Error: ' + err));
 })
 
 module.exports = router;

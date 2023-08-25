@@ -8,22 +8,39 @@ export default class Table extends Component {
         this.onChangeRowsNum = this.onChangeRowsNum.bind(this);
         this.onChangeColumnsNum = this.onChangeColumnsNum.bind(this);
         this.changeCellData = this.changeCellData.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
 
         this.state = {
-            rowsNumber: '',
-            columnsNumber: '',
-            hasSelected: '',
-            selectedRow: '',
-            selectedColumn: ''
+            rowsNumber: 0,
+            columnsNumber: 0,
+            hasSelected: false,
+            selectedRow: -1,
+            selectedColumn: -1
         };
+    }
+
+    componentDidMount(){
+        axios.get('http://localhost:5001/tables')
+            .then(response => {
+                // console.log('Response:', response.data);
+                this.setState({
+                    rowsNumber: response.data[0].rowsNumber,
+                    columnsNumber: response.data[0].columnsNumber,
+                    hasSelected: response.data[0].hasSelected,
+                    selectedRow: response.data[0].selectedRow,
+                    selectedColumn: response.data[0].selectedColumn
+                })
+                console.log(this.state)
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
     }
 
     onChangeRowsNum(e){
         this.setState({
             rowsNumber: e.target.value
         });
-
-        axios.post('http://localhost:5001/tables/add')
     }
 
     onChangeColumnsNum(e){
@@ -35,8 +52,8 @@ export default class Table extends Component {
     changeCellData(row_id, col_id){
         if(this.state.selectedRow === row_id && this.state.selectedColumn === col_id){
             this.setState({
-                selectedRow: '',
-                selectedColumn: '',
+                selectedRow: -1,
+                selectedColumn: -1,
                 hasSelected: false
             });
         }else{
@@ -46,6 +63,21 @@ export default class Table extends Component {
                 hasSelected: true
             });
         }
+    }
+
+    onSubmit(){
+        const ID = '64e88fd75951bf28000da463';
+
+        const table = {
+            rowsNumber: this.state.rowsNumber,
+            columnsNumber: this.state.columnsNumber,
+            hasSelected: this.state.hasSelected,
+            selectedRow: this.state.selectedRow,
+            selectedColumn: this.state.selectedColumn    
+        }
+
+        axios.post('http://localhost:5001/tables/update/' + ID , table)
+            .then(res => console.log(res.data));
     }
 
     renderTableData() {
@@ -81,13 +113,13 @@ export default class Table extends Component {
             <div>
                 <div>
                 <table>
-                    {/* <thead>{this.renderTableHeader()}</thead> */}
                     <tbody>{this.renderTableData()}</tbody>
                 </table>
                 </div>
 
-                <input type = "number" onChange = {this.onChangeRowsNum}></input>
-                <input type = "number" onChange = {this.onChangeColumnsNum}></input>
+                <input type = "number" onChange = {this.onChangeRowsNum} />
+                <input type = "number" onChange = {this.onChangeColumnsNum} />
+                <button onClick={this.onSubmit}>Submit</button>
 
             </div>
         );
