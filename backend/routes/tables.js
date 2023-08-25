@@ -12,7 +12,6 @@ router.route('/update/:id').post((req , res) => {
         .then(table => {
             table.rowsNumber = req.body.rowsNumber;
             table.columnsNumber = req.body.columnsNumber;
-            table.hasSelected = req.body.hasSelected;
             table.selectedRow = req.body.selectedRow;
             table.selectedColumn = req.body.selectedColumn;
             

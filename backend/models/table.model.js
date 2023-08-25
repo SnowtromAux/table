@@ -5,7 +5,6 @@ const Schema = mongoose.Schema;
 const tableSchema = new Schema({
     rowsNumber: Number,
     columnsNumber: Number,
-    hasSelected: Boolean,
     selectedRow: Number,
     selectedColumn: Number
 })

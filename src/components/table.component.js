@@ -13,7 +13,6 @@ export default class Table extends Component {
         this.state = {
             rowsNumber: 0,
             columnsNumber: 0,
-            hasSelected: false,
             selectedRow: -1,
             selectedColumn: -1
         };
@@ -26,11 +25,9 @@ export default class Table extends Component {
                 this.setState({
                     rowsNumber: response.data[0].rowsNumber,
                     columnsNumber: response.data[0].columnsNumber,
-                    hasSelected: response.data[0].hasSelected,
                     selectedRow: response.data[0].selectedRow,
                     selectedColumn: response.data[0].selectedColumn
                 })
-                console.log(this.state)
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -54,13 +51,11 @@ export default class Table extends Component {
             this.setState({
                 selectedRow: -1,
                 selectedColumn: -1,
-                hasSelected: false
             });
         }else{
             this.setState({
                 selectedRow: row_id,
                 selectedColumn: col_id,
-                hasSelected: true
             });
         }
     }
@@ -71,7 +66,6 @@ export default class Table extends Component {
         const table = {
             rowsNumber: this.state.rowsNumber,
             columnsNumber: this.state.columnsNumber,
-            hasSelected: this.state.hasSelected,
             selectedRow: this.state.selectedRow,
             selectedColumn: this.state.selectedColumn    
         }
